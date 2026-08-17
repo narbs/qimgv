@@ -12,6 +12,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DUSE_QT5=OFF \
     -DPKG_CONFIG_EXECUTABLE=/usr/bin/pkg-config
 cmake --build build -j"$(nproc)"
 
-sudo cp build/qimgv/qimgv /usr/bin/qimgv
-# mpv plugin — qimgv looks for it in /usr/lib/qimgv (videoplayerinitproxy.cpp)
-sudo install -Dm755 build/plugins/player_mpv/player_mpv.so /usr/lib/qimgv/player_mpv.so
+# install under /usr/local (cmake's default prefix) so pacman's qimgv package
+# never clobbers it. /usr/local/bin precedes /usr/bin in PATH, and the mpv
+# plugin lands in /usr/local/lib/qimgv — the first dir the binary searches.
+sudo cmake --install build
